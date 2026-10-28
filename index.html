@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Termometría Industrial Interactiva</title>
+<meta name="author" content="Dra. María Elena Leyes">
+<meta name="description" content="Cuaderno interactivo de Instrumentación Industrial: medición de temperatura con RTD Pt100, termocupla y termistor NTC. Universidad del Valle, sede Cartago.">
+<meta name="theme-color" content="#b5121b">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/fuentes.css">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"></div>
+<div class="app">
+<aside class="side" id="side" aria-label="Índice del cuaderno">
+  <div class="side-in">
+    <div class="brand">
+      <span class="uv">Universidad del Valle</span>
+      <div class="mark">
+        <img src="img/logo-termometria.svg" alt="" width="34" height="34">
+        <b>Termometría<br>Industrial</b>
+      </div>
+      <small>Instrumentación Industrial · <span class="nw">2026-2</span></small>
+    </div>
+    <nav class="toc" id="toc"></nav>
+    <div class="side-foot">Dra. María Elena Leyes<br>Universidad del Valle · Sede Cartago</div>
+  </div>
+</aside>
+<div class="scrim" id="scrim" hidden></div>
+
+<div class="main">
+  <header class="top">
+    <button class="ibtn menu-btn" id="menuBtn" aria-label="Abrir índice"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <div class="where"><small id="secName">Presentación</small><b id="pageName">Portada</b></div>
+    <span class="count" id="count">1 / 20</span>
+    <button class="ibtn" id="prevBtn" aria-label="Página anterior"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="ibtn" id="nextBtn" aria-label="Página siguiente"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <button class="ibtn" id="themeBtn" aria-label="Cambiar tema claro u oscuro"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg></button>
+    <div class="progress"><i id="prog"></i></div>
+  </header>
+
+  <div class="book" id="book">
+
+<!-- ================= P0 PORTADA ================= -->
+<section class="page" id="portada" data-sec="Presentación" data-title="Portada">
+  <div class="hero">
+    <p class="eyebrow">Universidad del Valle · Sede Cartago · Tecnología en Electrónica</p>
+    <h1>Medición de temperatura en <em>procesos industriales</em></h1>
+    <p class="lead">Cuaderno interactivo de prácticas experimentales para Instrumentación Industrial. Recorre la cadena de medición completa, desde el sensor hasta la señal de 4–20 mA, con tres familias de sensores: la RTD Pt100, la termocupla y el termistor.</p>
+    <div class="sensors">
+      <div class="sensor" style="--c:var(--c-rtd)"><h3>RTD Pt100</h3><div class="k">0,385</div><div class="u">Ω/°C · resistencia de platino, 100 Ω a 0 °C</div></div>
+      <div class="sensor" style="--c:var(--c-tc)"><h3>Termocupla tipo K</h3><div class="k">≈ 41</div><div class="u">µV/°C · unión níquel-cromo / níquel-aluminio</div></div>
+      <div class="sensor" style="--c:var(--c-ntc)"><h3>Termistor NTC 10 kΩ</h3><div class="k">≈ −4,4</div><div class="u">%/°C a 25 °C · óxidos metálicos semiconductores</div></div>
+    </div>
+    <h2>Ruta del cuaderno</h2>
+    <div class="route" id="route"></div>
+    <div class="byline">
+      <div><b>Autor</b>Dra. María Elena Leyes</div>
+      <div><b>Asignatura</b>Instrumentación Industrial</div>
+      <div><b>Programa</b>Tecnología en Electrónica</div>
+      <div><b>Periodo</b>Agosto – diciembre 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= P1 GUÍA ================= -->
+<section class="page" id="guia" data-sec="Presentación" data-title="Guía de la práctica" hidden>
+  <p class="eyebrow">Guía de laboratorio</p>
+  <h1>Caracterización de sensores de temperatura</h1>
+  <p class="lead">Esta práctica tiene dos partes: una exploración guiada con simuladores y un laboratorio virtual en el que cada estudiante recibe un banco de medición con sensores ligeramente distintos a los nominales, tal como ocurre con los sensores reales.</p>
+  <h2>Objetivo general</h2>
+  <p>Caracterizar experimentalmente una RTD Pt100, una termocupla tipo K y un termistor NTC, y relacionar sus curvas de respuesta con los modelos normalizados y con las técnicas de acondicionamiento y transmisión de señal usadas en la industria.</p>
+  <h2>Objetivos específicos</h2>
+  <ol>
+    <li>Identificar la variable de proceso, los elementos primarios y la cadena de medición según la simbología ISA-5.1.</li>
+    <li>Obtener la curva <span class="mono">R–T</span> de una Pt100, estimar \(R_0\) y \(\alpha\) por mínimos cuadrados y cuantificar el error de la conexión a 2 hilos.</li>
+    <li>Medir la f.e.m. de una termocupla tipo K, aplicar la compensación de unión fría y calcular su coeficiente de Seebeck medio.</li>
+    <li>Ajustar los modelos \(\beta\) y Steinhart–Hart a un termistor NTC y comparar su exactitud.</li>
+    <li>Escalar la medición a un lazo de corriente de 4–20 mA y redactar un informe técnico con los resultados.</li>
+  </ol>
+  <h2>Equipos de referencia</h2>
+  <p>El laboratorio virtual reproduce el comportamiento de este montaje. Si la sede cuenta con los equipos, la misma guía sirve para la práctica presencial.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Equipo</th><th>Especificación sugerida</th><th>Uso</th></tr></thead>
+    <tbody>
+      <tr><td>Baño termostático</td><td>0–150 °C, estabilidad ±0,1 °C</td><td>Prácticas 1 y 3</td></tr>
+      <tr><td>Horno de pozo seco (calibrador)</td><td>50–650 °C</td><td>Práctica 2</td></tr>
+      <tr><td>Termómetro patrón</td><td>Pt100 clase AA o SPRT, incertidumbre ≤ 0,05 °C</td><td>Temperatura de referencia</td></tr>
+      <tr><td>Multímetro de banco</td><td>6½ dígitos, medición de resistencia a 4 hilos y de mV</td><td>Prácticas 1 y 2</td></tr>
+      <tr><td>Pt100 clase A</td><td>IEC 60751, 4 hilos, vaina de acero inoxidable</td><td>Práctica 1</td></tr>
+      <tr><td>Termocupla tipo K</td><td>IEC 60584, con cable de extensión KX</td><td>Práctica 2</td></tr>
+      <tr><td>Termistor NTC</td><td>10 kΩ a 25 °C, \(\beta \approx 3950\) K</td><td>Práctica 3</td></tr>
+      <tr><td>Microcontrolador</td><td>Arduino o ESP32 con ADC de 12 bits, resistencia fija de 10 kΩ</td><td>Práctica 3</td></tr>
+    </tbody>
+  </table></div>
+  <h2>Metodología</h2>
+  <ol class="steps">
+    <li><strong>Antes de la sesión.</strong> Lee las secciones II a VI y resuelve los simuladores. Responde las preguntas orientadoras de cada práctica.</li>
+    <li><strong>Durante la sesión.</strong> Identifícate en el laboratorio virtual con tu código estudiantil. Ese código define tu banco de medición, así que tus datos serán distintos a los de tus compañeros.</li>
+    <li><strong>Registro.</strong> Toma las lecturas que pide cada práctica, ejecuta el análisis y escribe tu interpretación en los campos de cada página.</li>
+    <li><strong>Después de la sesión.</strong> Resuelve los ejercicios, genera el informe en la sección IX, cópialo a tu procesador de texto y complétalo con gráficas y referencias.</li>
+  </ol>
+  <div class="callout warn"><b>Seguridad</b><p>En la práctica presencial, el baño y el horno de pozo seco alcanzan temperaturas que causan quemaduras. Usa guantes térmicos, no retires sondas calientes con la mano y deja enfriar los sensores sobre un soporte metálico.</p></div>
+</section>
+
+<!-- ================= P2 CADENA ================= -->
+<section class="page" id="cadena" data-sec="I · Fundamentos" data-title="Variable de proceso y cadena de medición" hidden>
+  <p class="eyebrow">Sección I · Fundamentos</p>
+  <h1>Variable de proceso y cadena de medición</h1>
+  <p class="lead">La temperatura es la variable de proceso más medida en la industria. En un lazo de control se compara la <em class="term">variable de proceso</em> (PV) con el <em class="term">punto de consigna</em> (SP), y la diferencia acciona el elemento final de control.</p>
+  <h2>Sensor, transductor y transmisor</h2>
+  <div class="grid3">
+    <div class="card"><h3 style="margin-top:0">Sensor</h3><p>Elemento en contacto con el proceso cuya propiedad física cambia con la temperatura: resistencia (RTD, termistor) o f.e.m. (termocupla). En la norma ISA-5.1 se identifica como <span class="tag">TE</span>.</p></div>
+    <div class="card"><h3 style="margin-top:0">Transductor</h3><p>Convierte una forma de energía en otra. El puente de Wheatstone convierte un cambio de resistencia en una tensión medible del orden de milivoltios.</p></div>
+    <div class="card"><h3 style="margin-top:0">Transmisor</h3><p>Acondiciona, linealiza y envía la señal normalizada de 4–20 mA a distancias de cientos de metros con buena inmunidad al ruido. Se identifica como <span class="tag">TT</span>.</p></div>
+  </div>
+  <h2>Recorrido de la señal</h2>
+  <p>Mueve la temperatura del proceso y observa cómo cambia la señal en cada etapa de una medición con Pt100, puente, amplificador de instrumentación y transmisor calibrado de 0 a 200 °C. Toca cada bloque para ver su función.</p>
+  <div class="card">
+    <div class="ctrl"><label for="ch-T">Temperatura del proceso <output id="ch-To">80,0 °C</output></label><input type="range" id="ch-T" min="0" max="200" step="0.5" value="80"></div>
+    <div class="chain" id="chain">
+      <button class="node on" data-i="0"><span class="tagisa">Proceso</span><b>Tanque de calentamiento</b><span class="val" id="ch-v0">—</span></button>
+      <button class="node" data-i="1"><span class="tagisa">TE-101</span><b>Pt100</b><span class="val" id="ch-v1">—</span></button>
+      <button class="node" data-i="2"><span class="tagisa">Puente + INA</span><b>Acondicionamiento</b><span class="val" id="ch-v2">—</span></button>
+      <button class="node" data-i="3"><span class="tagisa">TT-101</span><b>Transmisor 4–20 mA</b><span class="val" id="ch-v3">—</span></button>
+      <button class="node" data-i="4"><span class="tagisa">TIC-101</span><b>Indicador / controlador</b><span class="val" id="ch-v4">—</span></button>
+    </div>
+    <p id="ch-desc" class="muted" style="margin:0"></p>
+  </div>
+  <div class="callout"><b>Para el informe</b><p>Dibuja el diagrama P&amp;ID de este lazo con la simbología ISA-5.1 e indica el tipo de señal (física, eléctrica en mV, eléctrica en mA, digital) en cada línea.</p></div>
+</section>
+
+<!-- ================= P3 CARACTERÍSTICAS ================= -->
+<section class="page" id="caract" data-sec="I · Fundamentos" data-title="Características estáticas y dinámicas" hidden>
+  <p class="eyebrow">Sección I · Fundamentos</p>
+  <h1>Características estáticas y dinámicas</h1>
+  <p class="lead">Las hojas de datos de un instrumento describen qué tan bien mide en régimen permanente (características estáticas) y qué tan rápido sigue los cambios del proceso (características dinámicas).</p>
+  <h2>Características estáticas</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Término</th><th>Definición</th><th>Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Rango</strong></td><td>Valores entre el límite inferior (LRV) y superior (URV) de medición.</td><td>0 a 200 °C</td></tr>
+      <tr><td><strong>Alcance (span)</strong></td><td>Diferencia URV − LRV.</td><td>200 °C</td></tr>
+      <tr><td><strong>Sensibilidad</strong></td><td>Cambio de la salida por unidad de cambio de la entrada, \(S = \mathrm{d}y/\mathrm{d}x\).</td><td>0,385 Ω/°C</td></tr>
+      <tr><td><strong>Resolución</strong></td><td>Menor cambio de la entrada que produce un cambio detectable en la salida.</td><td>0,1 °C</td></tr>
+      <tr><td><strong>Exactitud</strong></td><td>Cercanía entre el valor medido y el valor verdadero.</td><td>±0,5 % del span</td></tr>
+      <tr><td><strong>Precisión (repetibilidad)</strong></td><td>Dispersión entre mediciones repetidas en las mismas condiciones.</td><td>σ = 0,05 °C</td></tr>
+      <tr><td><strong>No linealidad</strong></td><td>Máxima desviación respecto a la recta de ajuste, en % del span.</td><td>0,4 % FS</td></tr>
+      <tr><td><strong>Histéresis</strong></td><td>Diferencia en la lectura según se llegue al punto subiendo o bajando.</td><td>0,1 °C</td></tr>
+      <tr><td><strong>Deriva</strong></td><td>Cambio lento de la lectura con el tiempo a entrada constante.</td><td>0,05 °C/año</td></tr>
+    </tbody>
+  </table></div>
+  <div class="formula">\[ e_{\%\,\text{span}} = \frac{T_{\text{medida}} - T_{\text{verdadera}}}{\text{URV} - \text{LRV}} \times 100 \]<small>El error de un instrumento de proceso suele expresarse en porcentaje del alcance.</small></div>
+
+  <h2>Respuesta dinámica de primer orden</h2>
+  <p>Un sensor de temperatura dentro de una vaina o termopozo almacena calor. Ante un cambio brusco del proceso de \(T_i\) a \(T_f\), su lectura sigue un modelo de primer orden con constante de tiempo \(\tau\):</p>
+  <div class="formula">\[ \tau\,\frac{\mathrm{d}T_s}{\mathrm{d}t} + T_s = T_p \quad\Rightarrow\quad T_s(t) = T_f + (T_i - T_f)\,e^{-t/\tau} \]<small>En \(t=\tau\) el sensor recorre el 63,2 % del salto; en \(3\tau\), el 95 %; en \(5\tau\), el 99,3 %.</small></div>
+  <div class="sim">
+    <div class="card ctrls">
+      <div class="ctrl"><label for="dy-tau">Constante de tiempo τ <output id="dy-tauo"></output></label><input type="range" id="dy-tau" min="1" max="80" step="1" value="12"></div>
+      <div class="ctrl"><label for="dy-ti">Temperatura inicial <output id="dy-tio"></output></label><input type="range" id="dy-ti" min="0" max="100" step="1" value="25"></div>
+      <div class="ctrl"><label for="dy-tf">Temperatura final <output id="dy-tfo"></output></label><input type="range" id="dy-tf" min="0" max="200" step="1" value="90"></div>
+      <div class="seg" id="dy-pre" role="group" aria-label="Montajes típicos">
+        <button data-t="3">Desnudo</button><button data-t="12" class="on">Vaina</button><button data-t="45">Termopozo</button>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><small>t 63,2 %</small><b id="dy-k1"></b></div>
+        <div class="kpi"><small>t 95 %</small><b id="dy-k2"></b></div>
+        <div class="kpi"><small>t 99,3 %</small><b id="dy-k3"></b></div>
+      </div>
+    </div>
+    <div id="dy-plot"></div>
+  </div>
+  <div class="callout"><b>Pregunta</b><p>Un controlador muestrea cada 2 s una temperatura que puede cambiar 10 °C en 30 s. ¿Qué montaje elegirías y por qué el termopozo, aunque es más lento, sigue siendo obligatorio en líneas presurizadas?</p></div>
+</section>
+
+<!-- ================= P4 RTD TEORÍA ================= -->
+<section class="page" id="rtd" data-sec="II · RTD Pt100" data-title="Principio de la RTD Pt100" hidden>
+  <p class="eyebrow">Sección II · Detectores de temperatura resistivos</p>
+  <h1>La RTD Pt100</h1>
+  <p class="lead">Una RTD aprovecha el aumento de la resistencia eléctrica de un metal con la temperatura. El platino domina la industria por su estabilidad química, su respuesta casi lineal y su intercambiabilidad: una Pt100 tiene exactamente 100 Ω a 0 °C.</p>
+  <h2>Ecuación de Callendar–Van Dusen</h2>
+  <p>La norma IEC 60751 describe la resistencia de una Pt100 industrial con dos tramos:</p>
+  <div class="formula">\[ R(T) = R_0\left(1 + A\,T + B\,T^2\right), \qquad 0 \le T \le 850\ ^\circ\mathrm{C} \]
+  \[ R(T) = R_0\left[1 + A\,T + B\,T^2 + C\,(T-100)\,T^3\right], \qquad -200 \le T < 0\ ^\circ\mathrm{C} \]
+  <small>\(A = 3{,}9083\times10^{-3}\ ^\circ\mathrm{C}^{-1}\), \(B = -5{,}775\times10^{-7}\ ^\circ\mathrm{C}^{-2}\), \(C = -4{,}183\times10^{-12}\ ^\circ\mathrm{C}^{-4}\), \(R_0 = 100\ \Omega\).</small></div>
+  <p>Entre 0 y 100 °C se usa a menudo la aproximación lineal con el coeficiente medio \(\alpha\):</p>
+  <div class="formula">\[ R(T) \approx R_0\,(1+\alpha T), \qquad \alpha = \frac{R_{100}-R_0}{100\,R_0} = 0{,}00385\ ^\circ\mathrm{C}^{-1} \]</div>
+
+  <h2>Clases de tolerancia (IEC 60751)</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Clase</th><th>Tolerancia en °C</th><th class="num">a 0 °C</th><th class="num">a 100 °C</th><th>Rango válido (hilo bobinado)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>AA</strong></td><td>±(0,10 + 0,0017 <span class="abs">|T|</span>)</td><td class="num">±0,10</td><td class="num">±0,27</td><td>−50 a 250 °C</td></tr>
+      <tr><td><strong>A</strong></td><td>±(0,15 + 0,002 <span class="abs">|T|</span>)</td><td class="num">±0,15</td><td class="num">±0,35</td><td>−100 a 450 °C</td></tr>
+      <tr><td><strong>B</strong></td><td>±(0,30 + 0,005 <span class="abs">|T|</span>)</td><td class="num">±0,30</td><td class="num">±0,80</td><td>−196 a 600 °C</td></tr>
+      <tr><td><strong>C</strong></td><td>±(0,60 + 0,010 <span class="abs">|T|</span>)</td><td class="num">±0,60</td><td class="num">±1,60</td><td>−196 a 600 °C</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Conexión a 2, 3 y 4 hilos</h2>
+  <p>Los cables que unen la sonda con el instrumento también tienen resistencia, y el instrumento no distingue entre la del sensor y la de los cables.</p>
+  <div class="grid3">
+    <div class="card">
+      <img class="diagrama" src="img/conexion-2-hilos.svg" alt="Conexión a dos hilos de una RTD Pt100" width="200" height="110" loading="lazy">
+      <h3>2 hilos</h3><p>\(R_m = R_T + 2R_L\). El error crece con la longitud del cable: 1 Ω de cable equivale a unos 2,6 °C.</p>
+    </div>
+    <div class="card">
+      <img class="diagrama" src="img/conexion-3-hilos.svg" alt="Conexión a tres hilos de una RTD Pt100" width="200" height="110" loading="lazy">
+      <h3>3 hilos</h3><p>Un hilo queda en cada rama del puente y sus efectos se cancelan si los conductores son iguales. Es el estándar en planta.</p>
+    </div>
+    <div class="card">
+      <img class="diagrama" src="img/conexion-4-hilos.svg" alt="Conexión a cuatro hilos de una RTD Pt100" width="200" height="110" loading="lazy">
+      <h3>4 hilos</h3><p>Dos hilos llevan la corriente y dos miden la tensión sin corriente apreciable. Elimina el error de los cables; se usa en laboratorio y calibración.</p>
+    </div>
+  </div>
+  <h2>Autocalentamiento</h2>
+  <p>La corriente de excitación disipa potencia en el sensor y lo calienta por encima del proceso. El error depende del coeficiente de disipación \(\delta\), que es mayor en líquidos agitados que en aire quieto.</p>
+  <div class="formula">\[ \Delta T_{\text{auto}} = \frac{P}{\delta} = \frac{I^2 R_T}{\delta} \]<small>Con \(I = 1\) mA, \(R_T \approx 100\ \Omega\) y \(\delta = 5\) mW/°C, el error es de 0,02 °C. Con 10 mA sube a 2 °C.</small></div>
+</section>
+
+<!-- ================= P5 SIM PT100 ================= -->
+<section class="page" id="simrtd" data-sec="II · RTD Pt100" data-title="Simulador de Pt100" hidden>
+  <p class="eyebrow">Sección II · Simulador</p>
+  <h1>Simulador de Pt100 industrial</h1>
+  <p class="lead">Configura el cableado, la corriente de excitación y la clase del sensor. El simulador calcula la resistencia que ve el instrumento, la temperatura que indica y si el error total cabe dentro de la tolerancia de la clase.</p>
+  <div class="sim">
+    <div class="card ctrls">
+      <div class="ctrl"><label for="r-T">Temperatura del proceso <output id="r-To"></output></label><input type="range" id="r-T" min="-50" max="400" step="0.5" value="120"></div>
+      <div class="ctrl"><label>Conexión</label><div class="seg" id="r-w"><button data-v="2">2 hilos</button><button data-v="3" class="on">3 hilos</button><button data-v="4">4 hilos</button></div></div>
+      <div class="ctrl"><label for="r-L">Longitud del cable <output id="r-Lo"></output></label><input type="range" id="r-L" min="0" max="150" step="1" value="40"></div>
+      <div class="ctrl"><label for="r-awg">Calibre del conductor de cobre</label><select id="r-awg"><option value="0.0210">AWG 18 · 0,0210 Ω/m</option><option value="0.0333">AWG 20 · 0,0333 Ω/m</option><option value="0.0530" selected>AWG 22 · 0,0530 Ω/m</option><option value="0.0842">AWG 24 · 0,0842 Ω/m</option></select></div>
+      <div class="ctrl"><label for="r-I">Corriente de excitación <output id="r-Io"></output></label><input type="range" id="r-I" min="0.1" max="10" step="0.1" value="1"></div>
+      <div class="ctrl"><label for="r-d">Coef. de disipación δ <output id="r-do"></output></label><input type="range" id="r-d" min="1" max="30" step="0.5" value="5"></div>
+      <div class="ctrl"><label>Clase IEC 60751</label><div class="seg" id="r-cl"><button data-v="AA">AA</button><button data-v="A" class="on">A</button><button data-v="B">B</button><button data-v="C">C</button></div></div>
+      <p class="muted" style="font-size:12.5px;margin:0">En 3 hilos se supone un desbalance del 2 % entre conductores.</p>
+    </div>
+    <div class="stack" style="min-width:0">
+      <div class="kpis" id="r-kpis"></div>
+      <div id="r-plot1"></div>
+    </div>
+  </div>
+  <h2>Error de medición frente a la tolerancia de la clase</h2>
+  <p>La franja sombreada es la tolerancia permitida para la clase elegida. La curva muestra el error de la configuración actual en todo el rango. Cambia la conexión a 2 hilos y alarga el cable para ver cuándo se sale de la franja.</p>
+  <div id="r-plot2"></div>
+</section>
+
+<!-- ================= P6 TC TEORÍA ================= -->
+<section class="page" id="tc" data-sec="III · Termocupla" data-title="Principio de la termocupla" hidden>
+  <p class="eyebrow">Sección III · Termoeléctricos</p>
+  <h1>La termocupla</h1>
+  <p class="lead">Dos conductores de metales distintos unidos en un extremo generan una fuerza electromotriz que depende de la diferencia de temperatura entre la unión de medida (caliente) y la unión de referencia (fría). Es el efecto Seebeck.</p>
+  <div class="formula">\[ E_{AB} = \int_{T_{\text{ref}}}^{T_h} S_{AB}(T)\,\mathrm{d}T \;\approx\; S_{AB}\,(T_h - T_{\text{ref}}) \]<small>\(S_{AB}\) es el coeficiente de Seebeck del par, del orden de decenas de µV/°C.</small></div>
+  <h2>Leyes termoeléctricas</h2>
+  <div class="grid3">
+    <div class="card"><h3 style="margin-top:0">Circuito homogéneo</h3><p>En un conductor homogéneo no se genera f.e.m. por gradientes de temperatura a lo largo de él. Solo importan las uniones.</p></div>
+    <div class="card"><h3 style="margin-top:0">Metales intermedios</h3><p>Insertar un tercer metal (los bornes de cobre del voltímetro) no altera la f.e.m. si sus dos uniones están a la misma temperatura.</p></div>
+    <div class="card"><h3 style="margin-top:0">Temperaturas sucesivas</h3><p>\(E(T_1,T_3) = E(T_1,T_2) + E(T_2,T_3)\). Esta ley justifica la compensación de unión fría.</p></div>
+  </div>
+  <h2>Compensación de unión fría</h2>
+  <p>Las tablas NIST ITS-90 dan la f.e.m. con la unión de referencia a 0 °C. El voltímetro mide la f.e.m. respecto a la temperatura de sus bornes, así que el instrumento mide \(T_{\text{amb}}\) con un sensor auxiliar (termistor o diodo) y suma la f.e.m. equivalente:</p>
+  <div class="formula">\[ E(T_h, 0) = E_{\text{medida}} + E(T_{\text{amb}}, 0) \quad\Rightarrow\quad T_h = E^{-1}\!\left[E_{\text{medida}} + E(T_{\text{amb}})\right] \]</div>
+  <p>La relación \(E(T)\) es un polinomio de la norma: \(E = \sum_{i=0}^{n} c_i\,T^i\) (en mV). Para la tipo K por encima de 0 °C se añade un término exponencial \(a_0\,e^{a_1 (T - a_2)^2}\).</p>
+  <h2>Tipos normalizados (IEC 60584)</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Tipo</th><th>Materiales (+ / −)</th><th>Rango de uso</th><th class="num">S aprox.</th><th>Color IEC (+)</th><th>Aplicación típica</th></tr></thead>
+    <tbody>
+      <tr><td><strong>K</strong></td><td>Ni-Cr / Ni-Al</td><td>−200 a 1260 °C</td><td class="num">41 µV/°C</td><td><span class="sw" style="background:#2fa84f"></span>Verde</td><td>Uso general, hornos, gases de combustión</td></tr>
+      <tr><td><strong>J</strong></td><td>Fe / Cu-Ni</td><td>0 a 760 °C</td><td class="num">52 µV/°C</td><td><span class="sw" style="background:#1d1d1d;border:1px solid var(--line)"></span>Negro</td><td>Plásticos, atmósferas reductoras</td></tr>
+      <tr><td><strong>T</strong></td><td>Cu / Cu-Ni</td><td>−200 a 370 °C</td><td class="num">43 µV/°C</td><td><span class="sw" style="background:#8a5a2b"></span>Café</td><td>Criogenia, alimentos</td></tr>
+      <tr><td><strong>E</strong></td><td>Ni-Cr / Cu-Ni</td><td>−200 a 870 °C</td><td class="num">68 µV/°C</td><td><span class="sw" style="background:#7b3fa0"></span>Violeta</td><td>Mayor sensibilidad</td></tr>
+      <tr><td><strong>N</strong></td><td>Ni-Cr-Si / Ni-Si</td><td>−200 a 1260 °C</td><td class="num">39 µV/°C</td><td><span class="sw" style="background:#e46ea3"></span>Rosado</td><td>Alternativa estable a la K</td></tr>
+      <tr><td><strong>R / S</strong></td><td>Pt-Rh / Pt</td><td>0 a 1480 °C</td><td class="num">10 µV/°C</td><td><span class="sw" style="background:#f08a24"></span>Naranja</td><td>Vidrio, metalurgia, patrones</td></tr>
+      <tr><td><strong>B</strong></td><td>Pt-30Rh / Pt-6Rh</td><td>600 a 1700 °C</td><td class="num">≈ 8 µV/°C</td><td><span class="sw" style="background:#9aa0a6"></span>Gris</td><td>Muy alta temperatura</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout warn"><b>Error frecuente</b><p>Si se reemplaza el cable de extensión KX por cable de cobre desde el cabezal, la unión de referencia queda en el cabezal (a veces a 60–80 °C) y el instrumento compensa con su propia temperatura ambiente. El error es aproximadamente la diferencia entre ambas temperaturas.</p></div>
+</section>
+
+<!-- ================= P7 SIM TC ================= -->
+<section class="page" id="simtc" data-sec="III · Termocupla" data-title="Simulador de termocupla" hidden>
+  <p class="eyebrow">Sección III · Simulador</p>
+  <h1>Simulador de termocupla y unión fría</h1>
+  <p class="lead">Las curvas usan los polinomios de referencia NIST ITS-90. Activa o desactiva la compensación y cambia el cable de extensión para ver cómo aparece el error de unión fría.</p>
+  <div class="sim">
+    <div class="card ctrls">
+      <div class="ctrl"><label>Tipo de termocupla</label><div class="seg" id="t-type"><button data-v="K" class="on">K</button><button data-v="J">J</button><button data-v="T">T</button></div></div>
+      <div class="ctrl"><label for="t-Th">Temperatura de la unión caliente <output id="t-Tho"></output></label><input type="range" id="t-Th" min="-100" max="1200" step="1" value="350"></div>
+      <div class="ctrl"><label for="t-Ta">Temperatura ambiente del instrumento <output id="t-Tao"></output></label><input type="range" id="t-Ta" min="0" max="50" step="0.5" value="25"></div>
+      <label class="check"><input type="checkbox" id="t-cjc" checked> Compensación de unión fría activa</label>
+      <div class="ctrl"><label>Cable desde el cabezal</label><div class="seg" id="t-cab"><button data-v="ext" class="on">Extensión del tipo</button><button data-v="cu">Cobre</button></div></div>
+      <div class="ctrl"><label for="t-Tc">Temperatura del cabezal <output id="t-Tco"></output></label><input type="range" id="t-Tc" min="15" max="150" step="1" value="70"></div>
+    </div>
+    <div class="stack" style="min-width:0">
+      <div class="kpis" id="t-kpis"></div>
+      <div id="t-plot"></div>
+    </div>
+  </div>
+  <h2>Tabla rápida a la temperatura elegida</h2>
+  <div class="tbl"><table><thead><tr><th>Tipo</th><th class="num">E(T) mV</th><th class="num">Sensibilidad local <span class="nc">µV/°C</span></th><th>Dentro del rango</th></tr></thead><tbody id="t-tab"></tbody></table></div>
+</section>
+
+<!-- ================= P8 NTC TEORÍA ================= -->
+<section class="page" id="ntc" data-sec="IV · Termistor" data-title="Principio del termistor" hidden>
+  <p class="eyebrow">Sección IV · Termistores</p>
+  <h1>El termistor NTC</h1>
+  <p class="lead">Un termistor es un resistor de óxidos metálicos sinterizados cuya resistencia cambia fuertemente con la temperatura. En los NTC la resistencia disminuye al calentarse; en los PTC aumenta bruscamente cerca de una temperatura de conmutación, por eso se usan como protección.</p>
+  <h2>Modelo β</h2>
+  <div class="formula">\[ R(T) = R_{25}\,\exp\!\left[\beta\left(\frac{1}{T} - \frac{1}{T_{25}}\right)\right], \qquad T \text{ en kelvin},\ T_{25} = 298{,}15\ \mathrm{K} \]<small>Despejando: \( \dfrac{1}{T} = \dfrac{1}{T_{25}} + \dfrac{1}{\beta}\ln\dfrac{R}{R_{25}} \). Es exacto en dos puntos y pierde exactitud lejos de ellos.</small></div>
+  <h2>Ecuación de Steinhart–Hart</h2>
+  <div class="formula">\[ \frac{1}{T} = A + B\,\ln R + C\,(\ln R)^3 \]<small>Con tres puntos de calibración se obtiene una exactitud mejor que ±0,02 °C en un rango de 100 °C. Para un NTC de 10 kΩ típico: \(A \approx 1{,}130\times10^{-3}\), \(B \approx 2{,}339\times10^{-4}\), \(C \approx 8{,}83\times10^{-8}\).</small></div>
+  <h2>Sensibilidad</h2>
+  <div class="formula">\[ \alpha_T = \frac{1}{R}\frac{\mathrm{d}R}{\mathrm{d}T} = -\frac{\beta}{T^2} \qquad \Rightarrow \qquad \alpha_{25} = -\frac{3950}{298{,}15^2} = -4{,}44\ \%/^\circ\mathrm{C} \]<small>Es unas diez veces mayor que la de una Pt100, pero cae rápidamente al aumentar la temperatura.</small></div>
+  <h2>Linealización con un divisor de tensión</h2>
+  <p>Con el NTC en la parte inferior de un divisor alimentado con \(V_{cc}\), la salida es \(V_o = V_{cc}\,\dfrac{R_T}{R_T + R_f}\). La curva de \(V_o(T)\) tiene un punto de inflexión, y la zona alrededor de él es casi lineal. La inflexión cae en la temperatura central \(T_c\) del rango si:</p>
+  <div class="formula">\[ R_f = R_{T_c}\,\frac{\beta - 2T_c}{\beta + 2T_c} \]</div>
+  <div class="callout"><b>Autocalentamiento</b><p>Un termistor pequeño en aire tiene \(\delta\) de apenas 1 a 2 mW/°C. Con 3,3 V sobre 10 kΩ disipa 0,27 mW y se calienta unas décimas de grado. Por eso conviene alimentar el divisor solo durante la conversión.</p></div>
+</section>
+
+<!-- ================= P9 SIM NTC ================= -->
+<section class="page" id="simntc" data-sec="IV · Termistor" data-title="Simulador de NTC con ADC" hidden>
+  <p class="eyebrow">Sección IV · Simulador</p>
+  <h1>Termistor NTC en un divisor con ADC</h1>
+  <p class="lead">Así se mide temperatura con un Arduino o un ESP32: un divisor de tensión, un conversor análogo-digital y un modelo para volver de la cuenta del ADC a grados Celsius.</p>
+  <div class="sim">
+    <div class="card ctrls">
+      <div class="ctrl"><label for="n-T">Temperatura <output id="n-To"></output></label><input type="range" id="n-T" min="-20" max="120" step="0.5" value="40"></div>
+      <div class="ctrl"><label>R a 25 °C</label><div class="seg" id="n-R25"><button data-v="1000">1 kΩ</button><button data-v="10000" class="on">10 kΩ</button><button data-v="100000">100 kΩ</button></div></div>
+      <div class="ctrl"><label for="n-b">Constante β <output id="n-bo"></output></label><input type="range" id="n-b" min="3000" max="4500" step="10" value="3950"></div>
+      <div class="ctrl"><label for="n-Rf"><span>Resistencia fija R<sub>f</sub></span> <output id="n-Rfo"></output></label><input type="range" id="n-Rf" min="2.7" max="5.7" step="0.01" value="4"></div>
+      <div class="ctrl"><label>Alimentación y ADC</label><div class="row"><select id="n-vcc" style="flex:1"><option value="3.3" selected>3,3 V</option><option value="5">5,0 V</option></select><select id="n-bits" style="flex:1"><option value="10">10 bits</option><option value="12" selected>12 bits</option><option value="16">16 bits</option></select></div></div>
+      <div class="ctrl"><label for="n-c1">Rango para linealizar <output id="n-co"></output></label><div class="row"><input type="number" id="n-c1" value="0" style="flex:1" aria-label="Temperatura mínima"><input type="number" id="n-c2" value="80" style="flex:1" aria-label="Temperatura máxima"></div></div>
+      <button class="btn" id="n-opt"><span>Usar R<sub>f</sub> óptima para el rango</span></button>
+    </div>
+    <div class="stack" style="min-width:0">
+      <div class="kpis" id="n-kpis"></div>
+      <div id="n-plot1"></div>
+    </div>
+  </div>
+  <h2>Tensión de salida del divisor</h2>
+  <p>La curva sólida es \(V_o(T)\); la recta discontinua une los extremos del rango que quieres linealizar. Cuanto más se parecen, más simple es la conversión en el firmware.</p>
+  <div id="n-plot2"></div>
+</section>
+
+<!-- ================= P10 ACONDICIONAMIENTO ================= -->
+<section class="page" id="acond" data-sec="V · Acondicionamiento" data-title="Puente, amplificador y lazo de 4–20 mA" hidden>
+  <p class="eyebrow">Sección V · Acondicionamiento y transmisión</p>
+  <h1>Del sensor al lazo de 4–20 mA</h1>
+  <p class="lead">Las señales de los sensores son pequeñas: décimas de ohmio por grado o decenas de microvoltios. Antes de llevarlas al sistema de control se convierten en tensión, se amplifican, se linealizan y se transmiten como corriente.</p>
+  <h2>Puente de Wheatstone con Pt100</h2>
+  <div class="formula">\[ V_o = V_{exc}\left(\frac{R_T}{R_T + R_3} - \frac{R_2}{R_1 + R_2}\right), \qquad R_1 = R_2 = R_3 = 100\ \Omega \]<small>A 0 °C el puente está equilibrado y \(V_o = 0\). Un amplificador de instrumentación con ganancia \(G = 1 + 49{,}4\ \mathrm{k\Omega}/R_G\) (INA128) eleva la señal al rango del ADC.</small></div>
+  <h2>Escalamiento del transmisor</h2>
+  <div class="formula">\[ I = 4\ \mathrm{mA} + 16\ \mathrm{mA}\cdot\frac{T - \mathrm{LRV}}{\mathrm{URV} - \mathrm{LRV}} \qquad\qquad V_{250\,\Omega} = I \cdot 250\ \Omega \]<small>El cero vivo de 4 mA permite distinguir 0 % de un cable roto. La recomendación NAMUR NE 43 reserva ≤ 3,6 mA y ≥ 21 mA para señalizar fallas.</small></div>
+  <div class="sim">
+    <div class="card ctrls">
+      <div class="ctrl"><label>Sensor del transmisor</label><div class="seg" id="a-s"><button data-v="pt" class="on">Pt100</button><button data-v="tc">Tipo K</button><button data-v="ntc">NTC</button></div></div>
+      <div class="ctrl"><label for="a-T">Temperatura medida <output id="a-To"></output></label><input type="range" id="a-T" min="-50" max="600" step="0.5" value="90"></div>
+      <div class="ctrl"><label>Rango calibrado (LRV, URV) en °C</label><div class="row"><input type="number" id="a-lrv" value="0" style="flex:1" aria-label="LRV"><input type="number" id="a-urv" value="150" style="flex:1" aria-label="URV"></div></div>
+      <div class="ctrl"><label for="a-vx">Excitación del puente <output id="a-vxo"></output></label><input type="range" id="a-vx" min="0.5" max="5" step="0.1" value="2.5"></div>
+      <div class="ctrl"><label for="a-rg"><span>R<sub>G</sub> del INA128</span> <output id="a-rgo"></output></label><input type="range" id="a-rg" min="100" max="5000" step="10" value="1000"></div>
+      <label class="check"><input type="checkbox" id="a-brk"> Simular cable roto</label>
+    </div>
+    <div class="stack" style="min-width:0">
+      <div class="kpis" id="a-kpis"></div>
+      <div id="a-plot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= P11 COMPARATIVA ================= -->
+<section class="page" id="compara" data-sec="V · Acondicionamiento" data-title="Comparación y selección de sensores" hidden>
+  <p class="eyebrow">Sección V · Criterios de selección</p>
+  <h1>¿Qué sensor elegir?</h1>
+  <p class="lead">No hay un sensor mejor en todo. La selección equilibra rango, exactitud, robustez, velocidad, costo y el tipo de acondicionamiento que exige cada uno.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Criterio</th><th><span class="sw" style="background:var(--c-rtd)"></span>Pt100</th><th><span class="sw" style="background:var(--c-tc)"></span>Termocupla K</th><th><span class="sw" style="background:var(--c-ntc)"></span>NTC</th></tr></thead>
+    <tbody>
+      <tr><td>Rango típico</td><td>−200 a 600 °C</td><td>−200 a 1260 °C</td><td>−50 a 150 °C</td></tr>
+      <tr><td>Exactitud típica</td><td>±0,15 a ±0,8 °C</td><td>±1,5 a ±2,5 °C</td><td>±0,1 a ±0,5 °C (en su rango)</td></tr>
+      <tr><td>Linealidad</td><td>Muy buena</td><td>Buena</td><td>Muy no lineal</td></tr>
+      <tr><td>Sensibilidad</td><td>0,385 Ω/°C (0,385 %/°C)</td><td>41 µV/°C</td><td>−4,4 %/°C a 25 °C</td></tr>
+      <tr><td>Estabilidad a largo plazo</td><td>Excelente</td><td>Moderada (deriva por oxidación)</td><td>Buena si está encapsulado</td></tr>
+      <tr><td>Respuesta</td><td>Media</td><td>Rápida (unión expuesta)</td><td>Rápida (perla pequeña)</td></tr>
+      <tr><td>Excitación</td><td>Requiere corriente</td><td>Autogenerada</td><td>Requiere corriente</td></tr>
+      <tr><td>Acondicionamiento crítico</td><td>Resistencia de cables</td><td>Unión fría, ruido en µV</td><td>Linealización</td></tr>
+      <tr><td>Costo relativo</td><td>Medio a alto</td><td>Bajo</td><td>Muy bajo</td></tr>
+    </tbody>
+  </table></div>
+  <h2>Linealidad comparada entre 0 y 150 °C</h2>
+  <p>Cada señal se normaliza de 0 % (a 0 °C) a 100 % (a 150 °C). Un sensor perfectamente lineal seguiría la diagonal. La separación respecto a ella es la no linealidad que el transmisor o el firmware debe corregir.</p>
+  <div id="c-plot"></div>
+  <h2>Casos de selección</h2>
+  <p>Elige el sensor que recomendarías y compara tu criterio con la justificación.</p>
+  <div class="scen" id="scen"></div>
+</section>
+
+<!-- ================= P12 LAB IDENTIFICACIÓN ================= -->
+<section class="page" id="labid" data-sec="VI · Laboratorio virtual" data-title="Ingreso al laboratorio" hidden>
+  <p class="eyebrow">Sección VI · Laboratorio virtual</p>
+  <h1>Ingreso al laboratorio</h1>
+  <p class="lead">Tu código estudiantil asigna un banco de medición. Cada banco tiene sensores con pequeñas desviaciones respecto a los valores nominales, cables de longitud distinta y una temperatura ambiente propia. Por eso tus resultados serán únicos.</p>
+  <div class="grid2">
+    <div class="card ctrls">
+      <div class="ctrl"><label for="id-name">Nombre completo</label><input type="text" id="id-name" placeholder="Ej.: María Fernanda Ríos Gómez" autocomplete="name"></div>
+      <div class="ctrl"><label for="id-code">Código estudiantil</label><input type="text" id="id-code" placeholder="Ej.: 202458731" inputmode="numeric"></div>
+      <div class="ctrl"><label for="id-mates">Compañeros de grupo (opcional)</label><input type="text" id="id-mates" placeholder="Nombres separados por comas"></div>
+      <div class="grid2" style="gap:10px">
+        <div class="ctrl"><label for="id-group">Grupo</label><input type="text" id="id-group" placeholder="Ej.: 50"></div>
+        <div class="ctrl"><label for="id-date">Fecha</label><input type="text" id="id-date"></div>
+      </div>
+      <button class="btn gold" id="id-go">Asignar banco de medición</button>
+    </div>
+    <div class="card">
+      <h3 style="margin-top:0">Tu banco</h3>
+      <div id="id-bench" class="empty">Escribe tu código y pulsa «Asignar banco de medición».</div>
+      <div class="callout warn" style="margin-bottom:0"><b>Importante</b><p>Si cambias el código después de tomar datos, el banco cambia y debes repetir las lecturas. Los datos se guardan en este navegador; si cambias de equipo, empieza de nuevo.</p></div>
+    </div>
+  </div>
+  <h2>Cómo funciona el laboratorio</h2>
+  <ol class="steps">
+    <li>Fija la temperatura del baño o del horno con el control deslizante. El indicador simula la estabilización: los valores fluctúan como en un instrumento real.</li>
+    <li>Pulsa <strong>Registrar lectura</strong> para guardar en la tabla los valores que muestra el indicador en ese instante.</li>
+    <li>Toma las lecturas mínimas que pide cada práctica, repartidas en todo el rango.</li>
+    <li>Pulsa <strong>Analizar datos</strong>. Se ajustan los modelos por mínimos cuadrados y se dibujan los resultados.</li>
+    <li>Escribe tu análisis en el campo de cada práctica. Todo se recopila en el generador de informe.</li>
+  </ol>
+</section>
+
+<!-- ================= P13 PRÁCTICA 1 ================= -->
+<section class="page" id="lab1" data-sec="VI · Laboratorio virtual" data-title="Práctica 1 · Caracterización de Pt100" hidden>
+  <p class="eyebrow">Práctica 1 · RTD</p>
+  <h1>Caracterización de una Pt100</h1>
+  <p class="lead">La Pt100 de tu banco está sumergida en un baño termostático junto al termómetro patrón. El multímetro mide la resistencia a 4 hilos y, en paralelo, como lo haría un instrumento conectado a 2 hilos con el cable de tu banco.</p>
+  <h3>Procedimiento</h3>
+  <ol class="steps">
+    <li>Registra al menos <strong>6 lecturas</strong> entre 0 y 150 °C, por ejemplo cada 25 °C.</li>
+    <li>Analiza los datos: se ajusta la recta \(R = R_0(1+\alpha T)\) a las lecturas de 4 hilos.</li>
+    <li>Compara \(\alpha\) con 0,00385 °C⁻¹ y el error de 2 hilos con la tolerancia de la clase A.</li>
+  </ol>
+  <div class="bench">
+    <div class="card ctrls">
+      <div class="ctrl"><label for="l1-sp">Consigna del baño <output id="l1-spo"></output></label><input type="range" id="l1-sp" min="0" max="150" step="1" value="25"></div>
+      <div class="row"><button class="btn gold" id="l1-rec">Registrar lectura</button><button class="btn" id="l1-an">Analizar datos</button><button class="btn sm" id="l1-clr">Borrar tabla</button></div>
+    </div>
+    <div class="lcd" aria-live="off">
+      <span class="st" id="l1-st">Estabilizando…</span>
+      <div><span>T patrón</span><b id="l1-d1">—</b></div>
+      <div><span>R 4 hilos</span><b id="l1-d2">—</b></div>
+      <div><span>R 2 hilos</span><b id="l1-d3">—</b></div>
+    </div>
+  </div>
+  <div class="tbl"><table><thead><tr><th class="num">#</th><th class="num">T patrón (°C)</th><th class="num">R 4 hilos (Ω)</th><th class="num">R 2 hilos (Ω)</th><th></th></tr></thead><tbody id="l1-tb"></tbody></table></div>
+  <div id="l1-res" class="results"></div>
+  <h3>Preguntas orientadoras</h3>
+  <ol class="qs">
+    <li>¿Qué tan lineal es la Pt100 entre 0 y 150 °C? Usa el coeficiente R² y los residuos.</li>
+    <li>¿Por qué el valor de \(R_0\) obtenido no es exactamente 100 Ω? ¿Cumple la clase A a 0 °C?</li>
+    <li>Calcula la resistencia total de tu cable con los datos de 2 hilos. ¿Qué longitud de cable AWG 22 corresponde?</li>
+    <li>¿Recomendarías la conexión a 2 hilos para este banco? Justifica con la tolerancia de la clase.</li>
+  </ol>
+  <div class="ctrl"><label for="l1-txt">Análisis de resultados de la práctica 1</label><textarea id="l1-txt" placeholder="Interpreta tus resultados respondiendo las preguntas orientadoras."></textarea></div>
+</section>
+
+<!-- ================= P14 PRÁCTICA 2 ================= -->
+<section class="page" id="lab2" data-sec="VI · Laboratorio virtual" data-title="Práctica 2 · Termocupla tipo K" hidden>
+  <p class="eyebrow">Práctica 2 · Termocupla</p>
+  <h1>Termocupla tipo K y compensación de unión fría</h1>
+  <p class="lead">La termocupla está en un horno de pozo seco con el termómetro patrón. El voltímetro mide la f.e.m. entre sus bornes, que están a la temperatura ambiente del laboratorio. No tiene compensación interna.</p>
+  <h3>Procedimiento</h3>
+  <ol class="steps">
+    <li>Registra al menos <strong>6 lecturas</strong> entre 50 y 600 °C. Anota también la temperatura ambiente.</li>
+    <li>Analiza: el programa calcula la temperatura con y sin compensación de unión fría usando la tabla NIST.</li>
+    <li>Estima el coeficiente de Seebeck medio como pendiente de \(E_{\text{med}}\) frente a \(T_h - T_{\text{amb}}\).</li>
+  </ol>
+  <div class="bench">
+    <div class="card ctrls">
+      <div class="ctrl"><label for="l2-sp">Consigna del horno <output id="l2-spo"></output></label><input type="range" id="l2-sp" min="50" max="600" step="5" value="100"></div>
+      <div class="row"><button class="btn gold" id="l2-rec">Registrar lectura</button><button class="btn" id="l2-an">Analizar datos</button><button class="btn sm" id="l2-clr">Borrar tabla</button></div>
+    </div>
+    <div class="lcd">
+      <span class="st" id="l2-st">Estabilizando…</span>
+      <div><span>T patrón</span><b id="l2-d1">—</b></div>
+      <div><span>f.e.m.</span><b id="l2-d2">—</b></div>
+      <div><span>T ambiente</span><b id="l2-d3">—</b></div>
+    </div>
+  </div>
+  <div class="tbl"><table><thead><tr><th class="num">#</th><th class="num">T patrón (°C)</th><th class="num">E medida (mV)</th><th class="num">T amb (°C)</th><th></th></tr></thead><tbody id="l2-tb"></tbody></table></div>
+  <div id="l2-res" class="results"></div>
+  <h3>Preguntas orientadoras</h3>
+  <ol class="qs">
+    <li>¿Cuánto vale en promedio el error sin compensación? Relaciónalo con la temperatura ambiente.</li>
+    <li>¿El coeficiente de Seebeck es constante en todo el rango? Compáralo con la sensibilidad local de la tabla NIST a 100 °C y a 500 °C.</li>
+    <li>Con compensación, ¿cuál es el error residual? ¿Cumple la tolerancia clase 2 de IEC 60584 (±2,5 °C o ±0,0075·<span class="abs">|T|</span>)?</li>
+    <li>Explica con la ley de temperaturas sucesivas por qué funciona la compensación.</li>
+  </ol>
+  <div class="ctrl"><label for="l2-txt">Análisis de resultados de la práctica 2</label><textarea id="l2-txt" placeholder="Interpreta tus resultados respondiendo las preguntas orientadoras."></textarea></div>
+</section>
+
+<!-- ================= P15 PRÁCTICA 3 ================= -->
+<section class="page" id="lab3" data-sec="VI · Laboratorio virtual" data-title="Práctica 3 · Termistor NTC" hidden>
+  <p class="eyebrow">Práctica 3 · Termistor</p>
+  <h1>Calibración de un termistor NTC</h1>
+  <p class="lead">El NTC forma un divisor con una resistencia de 10 kΩ alimentado con 3,3 V. Un ESP32 con ADC de 12 bits entrega la cuenta digital; con ella calculas la resistencia del termistor y ajustas dos modelos.</p>
+  <div class="formula">\[ V_o = \frac{N_{ADC}}{4095}\,V_{cc}, \qquad R_T = R_f\,\frac{V_o}{V_{cc} - V_o} \]</div>
+  <h3>Procedimiento</h3>
+  <ol class="steps">
+    <li>Registra al menos <strong>7 lecturas</strong> entre 0 y 100 °C.</li>
+    <li>Analiza: se ajusta el modelo β (recta de \(\ln R\) contra \(1/T\)) y el de Steinhart–Hart (mínimos cuadrados con tres parámetros).</li>
+    <li>Compara el error cuadrático medio de cada modelo.</li>
+  </ol>
+  <div class="bench">
+    <div class="card ctrls">
+      <div class="ctrl"><label for="l3-sp">Consigna del baño <output id="l3-spo"></output></label><input type="range" id="l3-sp" min="0" max="100" step="1" value="10"></div>
+      <div class="row"><button class="btn gold" id="l3-rec">Registrar lectura</button><button class="btn" id="l3-an">Analizar datos</button><button class="btn sm" id="l3-clr">Borrar tabla</button></div>
+    </div>
+    <div class="lcd">
+      <span class="st" id="l3-st">Estabilizando…</span>
+      <div><span>T patrón</span><b id="l3-d1">—</b></div>
+      <div><span>Cuenta ADC</span><b id="l3-d2">—</b></div>
+      <div><span>V salida</span><b id="l3-d3">—</b></div>
+    </div>
+  </div>
+  <div class="tbl"><table><thead><tr><th class="num">#</th><th class="num">T patrón (°C)</th><th class="num">N ADC</th><th class="num">V<sub>o</sub> (V)</th><th class="num">R<sub>T</sub> (Ω)</th><th></th></tr></thead><tbody id="l3-tb"></tbody></table></div>
+  <div id="l3-res" class="results"></div>
+  <h3>Preguntas orientadoras</h3>
+  <ol class="qs">
+    <li>¿Qué valor de β obtuviste y cuánto se aleja del nominal de 3950 K?</li>
+    <li>¿Cuál modelo describe mejor tu termistor? ¿En qué zona del rango falla más el modelo β?</li>
+    <li>Calcula la resolución en °C de un bit del ADC a 0 °C y a 100 °C. ¿Por qué cambia?</li>
+    <li>Escribe la función en C o Python que convertiría la cuenta del ADC a °C con tus coeficientes.</li>
+  </ol>
+  <div class="ctrl"><label for="l3-txt">Análisis de resultados de la práctica 3</label><textarea id="l3-txt" placeholder="Interpreta tus resultados respondiendo las preguntas orientadoras."></textarea></div>
+</section>
+
+<!-- ================= P16 EJERCICIOS ================= -->
+<section class="page" id="ejer" data-sec="VII · Ejercicios" data-title="Ejercicios con verificación" hidden>
+  <p class="eyebrow">Sección VII · Ejercicios</p>
+  <h1>Ejercicios con verificación</h1>
+  <p class="lead">Escribe tu respuesta con la coma o el punto como separador decimal y pulsa «Verificar». Se acepta una pequeña tolerancia por redondeo. El puntaje se incluye en el informe.</p>
+  <div class="row"><span class="pill" id="ex-score">0 / 13 correctos</span><button class="btn sm" id="ex-reset">Reiniciar respuestas</button></div>
+
+  <div class="ex" data-k="e1" data-tol="0.05"><div class="hd"><b>EJERCICIO 1 · RTD</b><span class="fb"></span></div>
+    <p>Con el modelo lineal \(\alpha = 0{,}00385\ ^\circ\mathrm{C}^{-1}\), calcula la resistencia de una Pt100 a 75 °C.</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">Ω</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(R = 100\,(1 + 0{,}00385\cdot 75) = \) <b class="ans" data-k="e1"></b> Ω.</div></details></div>
+
+  <div class="ex" data-k="e2" data-tol="0.1"><div class="hd"><b>EJERCICIO 2 · RTD</b><span class="fb"></span></div>
+    <p>Un transmisor lee 119,40 Ω en una Pt100 conectada a 4 hilos. Usando Callendar–Van Dusen, ¿cuál es la temperatura?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">°C</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>Se resuelve \(B T^2 + A T + (1 - R/R_0) = 0\) y se toma la raíz positiva: \(T = \dfrac{-A + \sqrt{A^2 - 4B(1-R/R_0)}}{2B} = \) <b class="ans" data-k="e2"></b> °C.</div></details></div>
+
+  <div class="ex" data-k="e3" data-tol="0.1"><div class="hd"><b>EJERCICIO 3 · RTD</b><span class="fb"></span></div>
+    <p>Una Pt100 a 2 hilos mide un proceso a 100 °C con 15 m de cable AWG 22 (0,0530 Ω/m por conductor). ¿Cuántos grados de error introduce el cable?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">°C</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(2R_L = 2\cdot15\cdot0{,}0530 = 1{,}59\ \Omega\). El instrumento lee \(R(100) + 1{,}59 = 140{,}10\ \Omega\) y lo convierte con CVD, lo que da un error de <b class="ans" data-k="e3"></b> °C.</div></details></div>
+
+  <div class="ex" data-k="e4" data-tol="0.04"><div class="hd"><b>EJERCICIO 4 · RTD</b><span class="fb"></span></div>
+    <p>Una Pt100 a 25 °C se excita con 5 mA y su coeficiente de disipación es 2 mW/°C. Calcula el error por autocalentamiento.</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">°C</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(R(25) = 109{,}73\ \Omega\); \(P = (0{,}005)^2\cdot109{,}73 = 2{,}74\ \mathrm{mW}\); \(\Delta T = P/\delta = \) <b class="ans" data-k="e4"></b> °C.</div></details></div>
+
+  <div class="ex" data-k="e5" data-tol="0.01"><div class="hd"><b>EJERCICIO 5 · RTD</b><span class="fb"></span></div>
+    <p>¿Cuál es la tolerancia máxima permitida para una Pt100 clase B a 200 °C?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">± °C</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(\pm(0{,}30 + 0{,}005\cdot200) = \pm\) <b class="ans" data-k="e5"></b> °C.</div></details></div>
+
+  <div class="ex" data-k="e6" data-tol="0.3"><div class="hd"><b>EJERCICIO 6 · Termocupla</b><span class="fb"></span></div>
+    <p>Un voltímetro conectado a una termocupla tipo K lee 10,000 mV. Sus bornes están a 25 °C. ¿Cuál es la temperatura de la unión caliente?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">°C</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(E(25) = 1{,}000\) mV. \(E(T_h) = 10{,}000 + 1{,}000 = 11{,}000\) mV; con la tabla NIST, \(T_h = \) <b class="ans" data-k="e6"></b> °C.</div></details></div>
+
+  <div class="ex" data-k="e7" data-tol="0.3"><div class="hd"><b>EJERCICIO 7 · Termocupla</b><span class="fb"></span></div>
+    <p>En el caso anterior, ¿cuántos grados de error tendría un instrumento sin compensación de unión fría (que supone la referencia a 0 °C)?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">°C</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>Sin compensar, el instrumento convierte 10,000 mV en <b class="ans" data-k="e7b"></b> °C. El error es <b class="ans" data-k="e7"></b> °C, cercano pero no igual a 25 °C porque la sensibilidad no es constante.</div></details></div>
+
+  <div class="ex" data-k="e8" data-tol="5"><div class="hd"><b>EJERCICIO 8 · Termistor</b><span class="fb"></span></div>
+    <p>Un NTC tiene \(R_{25} = 10\ \mathrm{k\Omega}\) y \(\beta = 3950\) K. ¿Cuál es su resistencia a 60 °C según el modelo β?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">Ω</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(R = 10000\,\exp\!\left[3950\left(\tfrac{1}{333{,}15} - \tfrac{1}{298{,}15}\right)\right] = \) <b class="ans" data-k="e8"></b> Ω.</div></details></div>
+
+  <div class="ex" data-k="e9" data-tol="0.005"><div class="hd"><b>EJERCICIO 9 · Termistor</b><span class="fb"></span></div>
+    <p>El NTC anterior está en la parte inferior de un divisor con \(R_f = 10\ \mathrm{k\Omega}\) y \(V_{cc} = 5\) V. ¿Cuál es la tensión de salida a 60 °C?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">V</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(V_o = 5\,\dfrac{R_T}{R_T + 10000} = \) <b class="ans" data-k="e9"></b> V.</div></details></div>
+
+  <div class="ex" data-k="e10" data-tol="1"><div class="hd"><b>EJERCICIO 10 · Termistor</b><span class="fb"></span></div>
+    <p>Si esa tensión entra a un ADC de 10 bits con referencia de 5 V, ¿qué cuenta digital entrega?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">cuentas</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(N = \mathrm{round}\left(\dfrac{V_o}{5}\cdot 1023\right) = \) <b class="ans" data-k="e10"></b>.</div></details></div>
+
+  <div class="ex" data-k="e11" data-tol="0.01"><div class="hd"><b>EJERCICIO 11 · Transmisión</b><span class="fb"></span></div>
+    <p>Un transmisor está calibrado de 0 a 150 °C. ¿Qué corriente entrega cuando el proceso está a 90 °C?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">mA</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(I = 4 + 16\cdot\dfrac{90}{150} = \) <b class="ans" data-k="e11"></b> mA.</div></details></div>
+
+  <div class="ex" data-k="e12" data-tol="0.01"><div class="hd"><b>EJERCICIO 12 · Transmisión</b><span class="fb"></span></div>
+    <p>Esa corriente pasa por una resistencia de 250 Ω en la entrada del PLC. ¿Qué tensión lee el PLC?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">V</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(V = I\cdot250\ \Omega = \) <b class="ans" data-k="e12"></b> V.</div></details></div>
+
+  <div class="ex" data-k="e13" data-tol="0.1"><div class="hd"><b>EJERCICIO 13 · Dinámica</b><span class="fb"></span></div>
+    <p>Un sensor con \(\tau = 8\) s está a 25 °C y se sumerge en un baño a 85 °C. ¿Cuánto tarda en indicar 80 °C?</p>
+    <div class="ans-row"><input type="text" inputmode="decimal" aria-label="Respuesta"><span class="unit">s</span><button class="btn sm">Verificar</button></div>
+    <details><summary>Ver solución</summary><div>\(80 = 85 - 60\,e^{-t/8}\Rightarrow e^{-t/8} = \tfrac{1}{12}\Rightarrow t = 8\ln 12 = \) <b class="ans" data-k="e13"></b> s.</div></details></div>
+</section>
+
+<!-- ================= P17 ESTRUCTURA INFORME ================= -->
+<section class="page" id="infest" data-sec="VIII · Informe" data-title="Estructura y evaluación del informe" hidden>
+  <p class="eyebrow">Sección VIII · Informe</p>
+  <h1>Estructura y evaluación del informe</h1>
+  <p class="lead">El informe se entrega en formato de artículo técnico, en máximo ocho páginas. El generador de la siguiente página arma el borrador con tus datos; tú completas el análisis, las figuras y la discusión.</p>
+  <h2>Estructura</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Sección</th><th>Contenido esperado</th></tr></thead>
+    <tbody>
+      <tr><td>1. Resumen</td><td>Qué se midió, cómo y cuál fue el resultado principal, en 150 palabras.</td></tr>
+      <tr><td>2. Objetivos</td><td>General y específicos de la guía.</td></tr>
+      <tr><td>3. Marco teórico</td><td>Ecuaciones de CVD, NIST ITS-90, β y Steinhart–Hart, con citas.</td></tr>
+      <tr><td>4. Montaje y procedimiento</td><td>Diagrama del montaje con simbología ISA y descripción de los pasos.</td></tr>
+      <tr><td>5. Resultados</td><td>Tablas de datos, parámetros ajustados con sus unidades y gráficas con ejes rotulados.</td></tr>
+      <tr><td>6. Análisis</td><td>Respuesta a las preguntas orientadoras de cada práctica, comparación con valores nominales y normas.</td></tr>
+      <tr><td>7. Conclusiones</td><td>Entre tres y cinco conclusiones que se deduzcan de tus datos.</td></tr>
+      <tr><td>8. Referencias</td><td>Normas y textos consultados, en formato IEEE o APA.</td></tr>
+    </tbody>
+  </table></div>
+  <h2>Rúbrica de evaluación</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Criterio</th><th class="num">Peso</th><th>Desempeño superior</th></tr></thead>
+    <tbody>
+      <tr><td>Toma y presentación de datos</td><td class="num">20 %</td><td>Lecturas suficientes y bien distribuidas; tablas con unidades y cifras significativas coherentes.</td></tr>
+      <tr><td>Ajuste de modelos y cálculos</td><td class="num">25 %</td><td>Parámetros correctos con su incertidumbre o R²; comparación cuantitativa con la norma.</td></tr>
+      <tr><td>Análisis e interpretación</td><td class="num">25 %</td><td>Explica las fuentes de error (cables, unión fría, no linealidad, cuantización) con argumentos físicos.</td></tr>
+      <tr><td>Ejercicios</td><td class="num">15 %</td><td>Al menos 11 de 13 ejercicios correctos, con procedimiento.</td></tr>
+      <tr><td>Redacción y formato</td><td class="num">15 %</td><td>Texto técnico claro, figuras numeradas y citadas, referencias completas.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ================= P18 GENERADOR ================= -->
+<section class="page" id="informe" data-sec="VIII · Informe" data-title="Generador del informe" hidden>
+  <p class="eyebrow">Sección VIII · Informe</p>
+  <h1>Generador del informe</h1>
+  <p class="lead">El borrador reúne tu identificación, las tablas de las tres prácticas, los parámetros ajustados, tu análisis y el puntaje de los ejercicios. Descárgalo en PDF listo para imprimir o entregar, o cópialo como texto si prefieres editarlo en Word.</p>
+  <div class="grid2">
+    <div class="ctrl"><label for="inf-res">Resumen</label><textarea id="inf-res" placeholder="Qué se midió, cómo y cuál fue el resultado principal."></textarea></div>
+    <div class="ctrl"><label for="inf-con">Conclusiones generales</label><textarea id="inf-con" placeholder="Entre tres y cinco conclusiones basadas en tus datos."></textarea></div>
+  </div>
+  <div class="row" style="margin:16px 0 6px"><button class="btn gold" id="inf-pdf">Descargar informe en PDF</button><button class="btn" id="inf-gen">Actualizar borrador</button><button class="btn" id="inf-copy">Copiar informe (texto)</button><button class="btn" id="inf-csv">Copiar datos (CSV)</button></div>
+  <p class="muted" style="font-size:13px;margin:0 0 16px">El PDF incluye portada, tablas numeradas, las gráficas de las tres prácticas, tu análisis y el puntaje de los ejercicios. Puedes imprimirlo desde cualquier lector de PDF.</p>
+  <div class="paper" id="paper"></div>
+</section>
+
+<!-- ================= P19 REFERENCIAS ================= -->
+<section class="page" id="refs" data-sec="VIII · Informe" data-title="Referencias" hidden>
+  <p class="eyebrow">Referencias</p>
+  <h1>Referencias</h1>
+  <ol>
+    <li>IEC 60751:2022. <em>Industrial platinum resistance thermometers and platinum temperature sensors</em>. International Electrotechnical Commission.</li>
+    <li>IEC 60584-1:2013. <em>Thermocouples. Part 1: EMF specifications and tolerances</em>. International Electrotechnical Commission.</li>
+    <li>Garrity, K., et al. <em>NIST ITS-90 Thermocouple Database</em> (NIST Standard Reference Database 60). National Institute of Standards and Technology. <a href="https://srdata.nist.gov/its90/main/" target="_blank" rel="noopener">srdata.nist.gov/its90</a></li>
+    <li>ANSI/ISA-5.1-2009. <em>Instrumentation and Control Symbols and Identification</em>. International Society of Automation.</li>
+    <li>NAMUR NE 43. <em>Standardization of the signal level for the failure information of digital transmitters</em>.</li>
+    <li>Steinhart, J. S., y Hart, S. R. (1968). Calibration curves for thermistors. <em>Deep-Sea Research</em>, 15(4), 497–503.</li>
+    <li>Creus Solé, A. (2010). <em>Instrumentación industrial</em> (8.ª ed.). Marcombo.</li>
+    <li>Pallás Areny, R. (2003). <em>Sensores y acondicionadores de señal</em> (4.ª ed.). Marcombo.</li>
+    <li>Fraden, J. (2016). <em>Handbook of Modern Sensors</em> (5.ª ed.). Springer.</li>
+    <li>Bentley, J. P. (2005). <em>Principles of Measurement Systems</em> (4.ª ed.). Pearson.</li>
+  </ol>
+  <div class="callout"><b>Nota técnica</b><p>Las curvas de las termocuplas K, J y T usan los coeficientes de referencia de NIST ITS-90. La Pt100 usa los coeficientes de IEC 60751. El termistor del laboratorio sigue una ecuación de Steinhart–Hart de un NTC comercial de 10 kΩ, con desviaciones propias de cada banco.</p></div>
+</section>
+
+  <nav class="pager" id="pager"></nav>
+  </div><!-- /book -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script src="js/lib/jspdf.umd.min.js"></script>
+<script src="js/lib/jspdf.plugin.autotable.min.js"></script>
+<script src="js/mathjax-config.js"></script>
+<script src="js/lib/tex-svg.js" async></script>
+<script src="js/core.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

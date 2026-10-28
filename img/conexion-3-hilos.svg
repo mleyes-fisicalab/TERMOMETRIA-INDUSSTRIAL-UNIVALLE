@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 110" role="img" aria-label="Conexión a tres hilos">
+<title>Conexión a tres hilos de una RTD Pt100</title>
+<rect width="200" height="110" rx="8" fill="#ffffff"/>
+<rect x="12" y="30" width="34" height="50" rx="5" fill="none" stroke="#1f6fd6" stroke-width="2"/><text x="29" y="60" text-anchor="middle" font-size="10" fill="#463f47" font-family="JetBrains Mono, Consolas, monospace">Pt100</text><path d="M46 36H150M46 52H150M46 74H150" stroke="#463f47" stroke-width="1.5"/><path d="M52 36V52" stroke="#463f47" stroke-width="1.5"/><rect x="150" y="26" width="40" height="58" rx="6" fill="none" stroke="#b5121b" stroke-width="1.5"/><text x="170" y="59" text-anchor="middle" font-size="10" fill="#b5121b" font-family="JetBrains Mono, Consolas, monospace">puente</text>
+</svg>
